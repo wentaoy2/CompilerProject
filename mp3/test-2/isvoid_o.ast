@@ -1,0 +1,79 @@
+#11
+_program
+  #11
+  _class
+    Main
+    IO
+    "isvoid_o.cl"
+    (
+    #5
+    _attr
+      x
+      Main
+      #5
+      _no_expr
+      : _no_type
+    #6
+    _method
+      func
+      Bool
+      #6
+      _isvoid
+        #6
+        _object
+          x
+        : Main
+      : Bool
+    #10
+    _method
+      main
+      Object
+      #10
+      _block
+        #8
+        _cond
+          #8
+          _dispatch
+            #8
+            _object
+              self
+            : SELF_TYPE
+            func
+            (
+            )
+          : Bool
+          #8
+          _dispatch
+            #8
+            _object
+              self
+            : SELF_TYPE
+            out_string
+            (
+            #8
+            _string
+              "ok"
+            : String
+            )
+          : SELF_TYPE
+          #8
+          _dispatch
+            #8
+            _object
+              self
+            : SELF_TYPE
+            out_string
+            (
+            #8
+            _string
+              "not ok"
+            : String
+            )
+          : SELF_TYPE
+        : SELF_TYPE
+        #9
+        _object
+          self
+        : SELF_TYPE
+      : SELF_TYPE
+    )

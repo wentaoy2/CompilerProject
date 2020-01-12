@@ -1,0 +1,64 @@
+MPDIR   = $(LEVEL)
+CS426 = /class/cs426
+OPT = opt
+
+LEXER   = $(MPDIR)/tools-bin/lexer
+PARSER  = $(MPDIR)/tools-bin/parser
+SEMANT  = $(MPDIR)/tools-bin/semant
+
+ifdef MP3
+COOLRT  = $(MPDIR)/src/coolrt.o
+else
+COOLRT  = 
+endif
+
+debug = true
+
+ifeq ($(debug),true)
+    EXTRAFLAGS = -DDEBUG
+    CGENOPTS = -c
+else
+    EXTRAFLAGS =
+    CGENOPTS =
+endif
+
+
+
+CPPFLAGS = -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS $(EXTRAFLAGS) \
+	   -I. -I$(MPDIR)/cool-support/include
+
+LDLIBS = 
+
+CXXFLAGS = -g -std=c++11 -Wall -Wno-deprecated -Wno-unused -fpermissive -Wno-write-strings
+CXX = clang++
+CC = clang
+
+.PRECIOUS: %.ast %.bc %.ll %.s %.exe
+
+%.ast: %.cl
+	$(LEXER) $< | $(PARSER) | $(SEMANT) > $@
+
+%.ll: %.ast $(CGEN)
+	$(CGEN) $(CGENOPTS) < $< > $@
+
+%.bc: %.ll
+	llvm-as $< -o $@
+
+%.s: %.bc
+	llc --filetype=asm $< -o $@
+
+%.exe: %.s $(COOLRT)
+	$(CC) -g $+ -o $@
+
+%.verify: %.bc
+	$(OPT) -verify $< | llvm-dis -o $@
+
+%-opt.bc: %.bc
+	$(OPT) -O3 $< -f -o $*-opt.bc
+
+%.out: %.exe
+	./$< > $@ || true
+
+clean:
+	-rm -f core *.exe *.bc *.ll *.out *.ast *.s *.o *.verify
+	$(CLEAN_LOCAL)

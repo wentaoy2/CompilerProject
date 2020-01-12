@@ -1,0 +1,280 @@
+; ModuleID = '<stdin>'
+source_filename = "equal4_o.ll"
+
+%Object_vtable = type { i32, i32, i8*, %Object* ()*, %Object* (%Object*)*, %String* (%Object*)*, %Object* (%Object*)* }
+%Object = type { %Object_vtable* }
+%String = type { %String_vtable*, i8* }
+%String_vtable = type { i32, i32, i8*, %String* ()*, %Object* (%String*)*, %String* (%String*)*, %String* (%String*)*, i32 (%String*)*, %String* (%String*, %String*)*, %String* (%String*, i32, i32)* }
+%Int_vtable = type { i32, i32, i8*, %Int* ()*, %Object* (%Int*)*, %String* (%Int*)*, %Int* (%Int*)* }
+%Int = type { %Int_vtable*, i32 }
+%Bool_vtable = type { i32, i32, i8*, %Bool* ()*, %Object* (%Bool*)*, %String* (%Bool*)*, %Bool* (%Bool*)* }
+%Bool = type { %Bool_vtable*, i1 }
+%IO_vtable = type { i32, i32, i8*, %IO* ()*, %Object* (%IO*)*, %String* (%IO*)*, %IO* (%IO*)*, %IO* (%IO*, %String*)*, %IO* (%IO*, i32)*, %String* (%IO*)*, i32 (%IO*)* }
+%IO = type { %IO_vtable* }
+%Main_vtable = type { i32, i32, i8*, %Main* ()*, %Object* (%Main*)*, %String* (%Main*)*, %Main* (%Main*)*, %Main* (%Main*, %String*)*, %Main* (%Main*, i32)*, %String* (%Main*)*, i32 (%Main*)*, %Main* (%Main*)* }
+%Main = type { %Main_vtable*, %A*, %A*, %A*, %B* }
+%A = type { %A_vtable*, i32 }
+%A_vtable = type { i32, i32, i8*, %A* ()*, %Object* (%A*)*, %String* (%A*)*, %A* (%A*)* }
+%B = type { %B_vtable*, i32 }
+%B_vtable = type { i32, i32, i8*, %B* ()*, %Object* (%B*)*, %String* (%B*)*, %B* (%B*)* }
+
+@str.Object = internal constant [7 x i8] c"Object\00"
+@Object_vtable_prototype = constant %Object_vtable { i32 0, i32 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i32), i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.Object, i32 0, i32 0), %Object* ()* @Object_new, %Object* (%Object*)* @Object_abort, %String* (%Object*)* @Object_type_name, %Object* (%Object*)* @Object_copy }
+@str.Int = internal constant [4 x i8] c"Int\00"
+@Int_vtable_prototype = constant %Int_vtable { i32 1, i32 ptrtoint (%Int* getelementptr (%Int, %Int* null, i32 1) to i32), i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.Int, i32 0, i32 0), %Int* ()* @Int_new, %Object* (%Int*)* bitcast (%Object* (%Object*)* @Object_abort to %Object* (%Int*)*), %String* (%Int*)* bitcast (%String* (%Object*)* @Object_type_name to %String* (%Int*)*), %Int* (%Int*)* bitcast (%Object* (%Object*)* @Object_copy to %Int* (%Int*)*) }
+@str.Bool = internal constant [5 x i8] c"Bool\00"
+@Bool_vtable_prototype = constant %Bool_vtable { i32 2, i32 ptrtoint (%Bool* getelementptr (%Bool, %Bool* null, i32 1) to i32), i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.Bool, i32 0, i32 0), %Bool* ()* @Bool_new, %Object* (%Bool*)* bitcast (%Object* (%Object*)* @Object_abort to %Object* (%Bool*)*), %String* (%Bool*)* bitcast (%String* (%Object*)* @Object_type_name to %String* (%Bool*)*), %Bool* (%Bool*)* bitcast (%Object* (%Object*)* @Object_copy to %Bool* (%Bool*)*) }
+@str.String = internal constant [7 x i8] c"String\00"
+@String_vtable_prototype = constant %String_vtable { i32 3, i32 mul nuw (i32 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i32), i32 2), i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.String, i32 0, i32 0), %String* ()* @String_new, %Object* (%String*)* bitcast (%Object* (%Object*)* @Object_abort to %Object* (%String*)*), %String* (%String*)* bitcast (%String* (%Object*)* @Object_type_name to %String* (%String*)*), %String* (%String*)* bitcast (%Object* (%Object*)* @Object_copy to %String* (%String*)*), i32 (%String*)* @String_length, %String* (%String*, %String*)* @String_concat, %String* (%String*, i32, i32)* @String_substr }
+@str.IO = internal constant [3 x i8] c"IO\00"
+@IO_vtable_prototype = constant %IO_vtable { i32 4, i32 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i32), i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.IO, i32 0, i32 0), %IO* ()* @IO_new, %Object* (%IO*)* bitcast (%Object* (%Object*)* @Object_abort to %Object* (%IO*)*), %String* (%IO*)* bitcast (%String* (%Object*)* @Object_type_name to %String* (%IO*)*), %IO* (%IO*)* bitcast (%Object* (%Object*)* @Object_copy to %IO* (%IO*)*), %IO* (%IO*, %String*)* @IO_out_string, %IO* (%IO*, i32)* @IO_out_int, %String* (%IO*)* @IO_in_string, i32 (%IO*)* @IO_in_int }
+@str.Main = internal constant [5 x i8] c"Main\00"
+@Main_vtable_prototype = constant %Main_vtable { i32 5, i32 mul nuw (i32 ptrtoint (i1** getelementptr (i1*, i1** null, i32 1) to i32), i32 5), i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.Main, i32 0, i32 0), %Main* ()* @Main_new, %Object* (%Main*)* bitcast (%Object* (%Object*)* @Object_abort to %Object* (%Main*)*), %String* (%Main*)* bitcast (%String* (%Object*)* @Object_type_name to %String* (%Main*)*), %Main* (%Main*)* bitcast (%Object* (%Object*)* @Object_copy to %Main* (%Main*)*), %Main* (%Main*, %String*)* bitcast (%IO* (%IO*, %String*)* @IO_out_string to %Main* (%Main*, %String*)*), %Main* (%Main*, i32)* bitcast (%IO* (%IO*, i32)* @IO_out_int to %Main* (%Main*, i32)*), %String* (%Main*)* bitcast (%String* (%IO*)* @IO_in_string to %String* (%Main*)*), i32 (%Main*)* bitcast (i32 (%IO*)* @IO_in_int to i32 (%Main*)*), %Main* (%Main*)* @Main_main }
+@str.A = internal constant [2 x i8] c"A\00"
+@A_vtable_prototype = constant %A_vtable { i32 6, i32 ptrtoint (%A* getelementptr (%A, %A* null, i32 1) to i32), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.A, i32 0, i32 0), %A* ()* @A_new, %Object* (%A*)* bitcast (%Object* (%Object*)* @Object_abort to %Object* (%A*)*), %String* (%A*)* bitcast (%String* (%Object*)* @Object_type_name to %String* (%A*)*), %A* (%A*)* bitcast (%Object* (%Object*)* @Object_copy to %A* (%A*)*) }
+@str.B = internal constant [2 x i8] c"B\00"
+@B_vtable_prototype = constant %B_vtable { i32 7, i32 ptrtoint (%B* getelementptr (%B, %B* null, i32 1) to i32), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.B, i32 0, i32 0), %B* ()* @B_new, %Object* (%B*)* bitcast (%Object* (%Object*)* @Object_abort to %Object* (%B*)*), %String* (%B*)* bitcast (%String* (%Object*)* @Object_type_name to %String* (%B*)*), %B* (%B*)* bitcast (%Object* (%Object*)* @Object_copy to %B* (%B*)*) }
+@str.3 = internal constant [14 x i8] c"<basic class>\00"
+@String.3 = constant %String { %String_vtable* @String_vtable_prototype, i8* getelementptr inbounds ([14 x i8], [14 x i8]* @str.3, i32 0, i32 0) }
+@str.2 = internal constant [5 x i8] c"ok!\0A\00"
+@String.2 = constant %String { %String_vtable* @String_vtable_prototype, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.2, i32 0, i32 0) }
+@str.1 = internal constant [9 x i8] c"not ok!\0A\00"
+@String.1 = constant %String { %String_vtable* @String_vtable_prototype, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.1, i32 0, i32 0) }
+@str.0 = internal constant [12 x i8] c"equal4_o.cl\00"
+@String.0 = constant %String { %String_vtable* @String_vtable_prototype, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.0, i32 0, i32 0) }
+
+declare i32 @strcmp(i8*, i8*)
+
+declare i32 @printf(i8*, ...)
+
+declare void @abort()
+
+declare i8* @malloc(i32)
+
+declare %Object* @Object_new()
+
+declare %Object* @Object_abort(%Object*)
+
+declare %String* @Object_type_name(%Object*)
+
+declare %Object* @Object_copy(%Object*)
+
+declare %IO* @IO_new()
+
+declare %IO* @IO_out_string(%IO*, %String*)
+
+declare %IO* @IO_out_int(%IO*, i32)
+
+declare %String* @IO_in_string(%IO*)
+
+declare i32 @IO_in_int(%IO*)
+
+declare %String* @String_new()
+
+declare i32 @String_length(%String*)
+
+declare %String* @String_concat(%String*, %String*)
+
+declare %String* @String_substr(%String*, i32, i32)
+
+declare %Int* @Int_new()
+
+declare void @Int_init(%Int*, i32)
+
+declare %Bool* @Bool_new()
+
+declare void @Bool_init(%Bool*, i1)
+
+define i32 @main() {
+entry:
+  %vtpm.0 = call %Main* @Main_new()
+  %main.returnValue = call %Main* @Main_main(%Main* %vtpm.0)
+  ret i32 0
+}
+
+define %Main* @Main_main(%Main* %self) {
+entry:
+  %vtpm.1 = alloca %Main*
+  store %Main* %self, %Main** %vtpm.1
+  %vtpm.2 = alloca %Main*
+  %vtpm.3 = load %Main*, %Main** %vtpm.1
+  %vtpm.4 = getelementptr %Main, %Main* %vtpm.3, i32 0, i32 1
+  %vtpm.5 = load %A*, %A** %vtpm.4
+  %vtpm.6 = load %Main*, %Main** %vtpm.1
+  %vtpm.7 = getelementptr %Main, %Main* %vtpm.6, i32 0, i32 2
+  %vtpm.8 = load %A*, %A** %vtpm.7
+  %vtpm.9 = bitcast %A* %vtpm.5 to i8*
+  %vtpm.10 = bitcast %A* %vtpm.8 to i8*
+  %vtpm.11 = icmp eq i8* %vtpm.9, %vtpm.10
+  br i1 %vtpm.11, label %condTrue.0, label %condFalse.1
+
+condTrue.0:                                       ; preds = %entry
+  %vtpm.12 = load %Main*, %Main** %vtpm.1
+  %vtpm.13 = icmp eq %Main* %vtpm.12, null
+  br i1 %vtpm.13, label %abort, label %tmp.0
+
+tmp.0:                                            ; preds = %condTrue.0
+  %vtpm.14 = getelementptr %Main, %Main* %vtpm.12, i32 0, i32 0
+  %vtpm.15 = load %Main_vtable*, %Main_vtable** %vtpm.14
+  %vtpm.16 = getelementptr %Main_vtable, %Main_vtable* %vtpm.15, i32 0, i32 7
+  %tmp.1 = load %Main* (%Main*, %String*)*, %Main* (%Main*, %String*)** %vtpm.16
+  %vtpm.17 = call %Main* %tmp.1(%Main* %vtpm.12, %String* @String.1)
+  store %Main* %vtpm.17, %Main** %vtpm.2
+  br label %end.2
+
+condFalse.1:                                      ; preds = %entry
+  %vtpm.18 = alloca %Main*
+  %vtpm.19 = load %Main*, %Main** %vtpm.1
+  %vtpm.20 = getelementptr %Main, %Main* %vtpm.19, i32 0, i32 2
+  %vtpm.21 = load %A*, %A** %vtpm.20
+  %vtpm.22 = load %Main*, %Main** %vtpm.1
+  %vtpm.23 = getelementptr %Main, %Main* %vtpm.22, i32 0, i32 3
+  %vtpm.24 = load %A*, %A** %vtpm.23
+  %vtpm.25 = bitcast %A* %vtpm.21 to i8*
+  %vtpm.26 = bitcast %A* %vtpm.24 to i8*
+  %vtpm.27 = icmp eq i8* %vtpm.25, %vtpm.26
+  br i1 %vtpm.27, label %condTrue.3, label %condFalse.4
+
+condTrue.3:                                       ; preds = %condFalse.1
+  %vtpm.28 = alloca %Main*
+  %vtpm.29 = load %Main*, %Main** %vtpm.1
+  %vtpm.30 = getelementptr %Main, %Main* %vtpm.29, i32 0, i32 4
+  %vtpm.31 = load %B*, %B** %vtpm.30
+  %vtpm.32 = load %Main*, %Main** %vtpm.1
+  %vtpm.33 = getelementptr %Main, %Main* %vtpm.32, i32 0, i32 2
+  %vtpm.34 = load %A*, %A** %vtpm.33
+  %vtpm.35 = bitcast %B* %vtpm.31 to i8*
+  %vtpm.36 = bitcast %A* %vtpm.34 to i8*
+  %vtpm.37 = icmp eq i8* %vtpm.35, %vtpm.36
+  br i1 %vtpm.37, label %condTrue.6, label %condFalse.7
+
+condTrue.6:                                       ; preds = %condTrue.3
+  %vtpm.38 = load %Main*, %Main** %vtpm.1
+  %vtpm.39 = icmp eq %Main* %vtpm.38, null
+  br i1 %vtpm.39, label %abort, label %tmp.2
+
+tmp.2:                                            ; preds = %condTrue.6
+  %vtpm.40 = getelementptr %Main, %Main* %vtpm.38, i32 0, i32 0
+  %vtpm.41 = load %Main_vtable*, %Main_vtable** %vtpm.40
+  %vtpm.42 = getelementptr %Main_vtable, %Main_vtable* %vtpm.41, i32 0, i32 7
+  %tmp.3 = load %Main* (%Main*, %String*)*, %Main* (%Main*, %String*)** %vtpm.42
+  %vtpm.43 = call %Main* %tmp.3(%Main* %vtpm.38, %String* @String.2)
+  store %Main* %vtpm.43, %Main** %vtpm.28
+  br label %end.8
+
+condFalse.7:                                      ; preds = %condTrue.3
+  %vtpm.44 = load %Main*, %Main** %vtpm.1
+  %vtpm.45 = icmp eq %Main* %vtpm.44, null
+  br i1 %vtpm.45, label %abort, label %tmp.4
+
+tmp.4:                                            ; preds = %condFalse.7
+  %vtpm.46 = getelementptr %Main, %Main* %vtpm.44, i32 0, i32 0
+  %vtpm.47 = load %Main_vtable*, %Main_vtable** %vtpm.46
+  %vtpm.48 = getelementptr %Main_vtable, %Main_vtable* %vtpm.47, i32 0, i32 7
+  %tmp.5 = load %Main* (%Main*, %String*)*, %Main* (%Main*, %String*)** %vtpm.48
+  %vtpm.49 = call %Main* %tmp.5(%Main* %vtpm.44, %String* @String.1)
+  store %Main* %vtpm.49, %Main** %vtpm.28
+  br label %end.8
+
+end.8:                                            ; preds = %tmp.4, %tmp.2
+  %vtpm.50 = load %Main*, %Main** %vtpm.28
+  store %Main* %vtpm.50, %Main** %vtpm.18
+  br label %end.5
+
+condFalse.4:                                      ; preds = %condFalse.1
+  %vtpm.51 = load %Main*, %Main** %vtpm.1
+  %vtpm.52 = icmp eq %Main* %vtpm.51, null
+  br i1 %vtpm.52, label %abort, label %tmp.6
+
+tmp.6:                                            ; preds = %condFalse.4
+  %vtpm.53 = getelementptr %Main, %Main* %vtpm.51, i32 0, i32 0
+  %vtpm.54 = load %Main_vtable*, %Main_vtable** %vtpm.53
+  %vtpm.55 = getelementptr %Main_vtable, %Main_vtable* %vtpm.54, i32 0, i32 7
+  %tmp.7 = load %Main* (%Main*, %String*)*, %Main* (%Main*, %String*)** %vtpm.55
+  %vtpm.56 = call %Main* %tmp.7(%Main* %vtpm.51, %String* @String.1)
+  store %Main* %vtpm.56, %Main** %vtpm.18
+  br label %end.5
+
+end.5:                                            ; preds = %tmp.6, %end.8
+  %vtpm.57 = load %Main*, %Main** %vtpm.18
+  store %Main* %vtpm.57, %Main** %vtpm.2
+  br label %end.2
+
+end.2:                                            ; preds = %end.5, %tmp.0
+  %vtpm.58 = load %Main*, %Main** %vtpm.2
+  ret %Main* %vtpm.58
+
+abort:                                            ; preds = %condFalse.4, %condFalse.7, %condTrue.6, %condTrue.0
+  call void @abort()
+  unreachable
+}
+
+define %Main* @Main_new() {
+entry:
+  %vtpm.60 = getelementptr %Main_vtable, %Main_vtable* @Main_vtable_prototype, i32 0, i32 1
+  %vtpm.61 = load i32, i32* %vtpm.60
+  %vtpm.62 = call i8* @malloc(i32 %vtpm.61)
+  %vtpm.63 = bitcast i8* %vtpm.62 to %Main*
+  %vtpm.64 = getelementptr %Main, %Main* %vtpm.63, i32 0, i32 0
+  store %Main_vtable* @Main_vtable_prototype, %Main_vtable** %vtpm.64
+  %vtpm.65 = alloca %Main*
+  store %Main* %vtpm.63, %Main** %vtpm.65
+  %vtpm.66 = call %A* @A_new()
+  %vtpm.67 = load %Main*, %Main** %vtpm.65
+  %vtpm.68 = getelementptr %Main, %Main* %vtpm.67, i32 0, i32 1
+  store %A* %vtpm.66, %A** %vtpm.68
+  %vtpm.69 = load %Main*, %Main** %vtpm.65
+  %vtpm.70 = getelementptr %Main, %Main* %vtpm.69, i32 0, i32 2
+  store %A* null, %A** %vtpm.70
+  %vtpm.71 = load %Main*, %Main** %vtpm.65
+  %vtpm.72 = getelementptr %Main, %Main* %vtpm.71, i32 0, i32 3
+  store %A* null, %A** %vtpm.72
+  %vtpm.73 = load %Main*, %Main** %vtpm.65
+  %vtpm.74 = getelementptr %Main, %Main* %vtpm.73, i32 0, i32 4
+  store %B* null, %B** %vtpm.74
+  ret %Main* %vtpm.63
+
+abort:                                            ; No predecessors!
+  call void @abort()
+  unreachable
+}
+
+define %A* @A_new() {
+entry:
+  %vtpm.76 = getelementptr %A_vtable, %A_vtable* @A_vtable_prototype, i32 0, i32 1
+  %vtpm.77 = load i32, i32* %vtpm.76
+  %vtpm.78 = call i8* @malloc(i32 %vtpm.77)
+  %vtpm.79 = bitcast i8* %vtpm.78 to %A*
+  %vtpm.80 = getelementptr %A, %A* %vtpm.79, i32 0, i32 0
+  store %A_vtable* @A_vtable_prototype, %A_vtable** %vtpm.80
+  %vtpm.81 = alloca %A*
+  store %A* %vtpm.79, %A** %vtpm.81
+  %vtpm.82 = load %A*, %A** %vtpm.81
+  %vtpm.83 = getelementptr %A, %A* %vtpm.82, i32 0, i32 1
+  store i32 2, i32* %vtpm.83
+  ret %A* %vtpm.79
+
+abort:                                            ; No predecessors!
+  call void @abort()
+  unreachable
+}
+
+define %B* @B_new() {
+entry:
+  %vtpm.85 = getelementptr %B_vtable, %B_vtable* @B_vtable_prototype, i32 0, i32 1
+  %vtpm.86 = load i32, i32* %vtpm.85
+  %vtpm.87 = call i8* @malloc(i32 %vtpm.86)
+  %vtpm.88 = bitcast i8* %vtpm.87 to %B*
+  %vtpm.89 = getelementptr %B, %B* %vtpm.88, i32 0, i32 0
+  store %B_vtable* @B_vtable_prototype, %B_vtable** %vtpm.89
+  %vtpm.90 = alloca %B*
+  store %B* %vtpm.88, %B** %vtpm.90
+  %vtpm.91 = load %B*, %B** %vtpm.90
+  %vtpm.92 = getelementptr %B, %B* %vtpm.91, i32 0, i32 1
+  store i32 3, i32* %vtpm.92
+  ret %B* %vtpm.88
+
+abort:                                            ; No predecessors!
+  call void @abort()
+  unreachable
+}

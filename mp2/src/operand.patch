@@ -1,0 +1,16 @@
+*** operand.cc	2016-10-06 19:03:27.002461000 -0500
+--- operand-FIXED.cc	2016-10-06 19:04:23.001983000 -0500
+***************
+*** 168,178 ****
+  	size = s;
+  	for (int j = s; j > 9; j %= 10)
+  		size_str += " ";
+- 	if (is_ptr())
+- 		type_name.erase(type_name.length() - 1);
+  	name = "[" + itoa(s, size_str) + " x " + type_name + "]";
+- 	if (is_ptr())
+- 		name += "*";
+  };
+  
+  /* Function and Function pointer types */
+--- 168,174 ----

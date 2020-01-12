@@ -1,0 +1,12 @@
+*** operand.h	2016-09-20 04:31:33.000000000 -0500
+--- ../../mp2/src/operand.h	2016-10-06 22:58:14.000223000 -0500
+***************
+*** 38,43 ****
+--- 38,44 ----
+  		void set_type(op_type t) 
+  		  { id = t.get_id(); name = t.get_name(); }
+  		string get_name() { return name; }
++ 		string get_ptr_type_name() { return name + "*"; }
+  		bool is_ptr() 
+  		  { return (id == INT1_PTR || id == INT8_PTR || 
+  		            id == INT32_PTR || id == OBJ_PTR); }

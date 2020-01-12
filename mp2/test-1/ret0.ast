@@ -1,0 +1,35 @@
+#9
+_program
+  #9
+  _class
+    Main
+    Object
+    "ret0.cl"
+    (
+    #8
+    _method
+      main
+      Int
+      #7
+      _cond
+        #3
+        _lt
+          #3
+          _int
+            5
+          : Int
+          #3
+          _int
+            6
+          : Int
+        : Bool
+        #4
+        _int
+          27
+        : Int
+        #6
+        _int
+          0
+        : Int
+      : Int
+    )
